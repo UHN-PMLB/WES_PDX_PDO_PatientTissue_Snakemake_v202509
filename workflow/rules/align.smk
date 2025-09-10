@@ -64,3 +64,98 @@ rule deconvolutexengsort:
     fi
     """
 
+
+rule bwa_mem2_index:
+    input:
+        ref = config["ref_index"]["genome"]
+    output:
+        idx = expand("{ref}.{ext}", 
+                     ref=config["ref_index"]["genome"], 
+                     ext=["0123","amb","ann","bwt.2bit.64","pac"])
+    params:
+        bwamem2container = config['env']['bwa_mem2']
+    threads: 4
+    shell:
+        """
+        module load apptainer/1.0.2
+
+        apptainer run {params.bwamem2container} \
+        bwa-mem2 index {input.ref}
+        """
+
+rule bwa_mem2_align_pe:
+    input:
+        fq1 = "results/xengsort/{sample}-graft.1.fq.gz",
+        fq2 = "results/xengsort/{sample}-graft.2.fq.gz",
+        idx = expand("{ref}.{ext}", 
+                     ref=config["ref_index"]["genome"], 
+                     ext=["0123","amb","ann","bwt.2bit.64","pac"])
+    output:
+        bam = "results/bwa/pe/{sample}/Aligned.sortedByCoord.out.bam",
+    params:
+        ref = config["ref_index"]["genome"],
+        bwamem2container = config['env']['bwa_mem2'],
+    threads: 16
+    shell:
+        """
+        module load apptainer/1.0.2
+        module load samtools/1.20
+
+        mkdir -p results/bwa/pe/{wildcards.sample}
+
+        apptainer run {params.bwamem2container} \
+        bwa-mem2 mem -t {threads} {params.ref} {input.fq1} {input.fq2} \
+            | samtools sort -@ {threads} -o {output.bam}
+        """
+
+rule bwa_mem2_align_se:
+    input:
+        fq1 = "results/xengsort/{sample}-graft.1.fq.gz",
+        idx = expand("{ref}.{ext}", 
+                     ref=config["ref_index"]["genome"], 
+                     ext=["0123","amb","ann","bwt.2bit.64","pac"])
+    output:
+        bam = "results/bwa/se/{sample}/Aligned.sortedByCoord.out.bam",
+    params:
+        ref = config["ref_index"]["genome"],
+        bwamem2container = config['env']['bwa_mem2'],
+    threads: 16
+    shell:
+        """
+        module load apptainer/1.0.2
+        module load samtools/1.20
+
+        mkdir -p results/bwa/se/{wildcards.sample}
+
+        apptainer run {params.bwamem2container} \
+        bwa-mem2 mem -t {threads} {params.ref} {input.fq1} \
+            | samtools sort -@ {threads} -o {output.bam}
+        """
+
+rule index_coord:
+    input:
+        bam = "results/bwa/{strand}/{sample}/Aligned.sortedByCoord.out.bam",
+    output:
+        bai = "results/bwa/{strand}/{sample}/Aligned.sortedByCoord.out.bam.bai",
+    shell:
+        """
+        module load samtools/1.20
+        samtools index {input.bam} {output.bai}
+        """
+
+rule picard_align_matrix:
+    input:
+        bam = "results/bwa/{strand}/{sample}/Aligned.sortedByCoord.out.bam",
+    params:
+        ref = config['ref_index']['genome'],
+    output:
+        align_matrix = "results/picard/{strand}/{sample}_picard_align_matrix.txt",
+    shell:
+        """
+        module load picard/2.10.9
+
+        java -jar $picard_dir/picard.jar CollectAlignmentSummaryMetrics \
+            R={params.ref} \
+            I={input.bam} \
+            O={output.align_matrix}
+        """

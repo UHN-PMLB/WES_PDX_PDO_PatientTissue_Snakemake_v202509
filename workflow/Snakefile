@@ -1,15 +1,15 @@
 # this container defines the underlying OS for each job when using the workflow
-workdir: "/cluster/projects/cesconlab/workspace/Guanqiao/workflow/RNAseq_test"
+workdir: "/cluster/projects/livingbank/workspace/Guanqiao/workflow/WES_PDX_PDO_PatientTissue_Snakemake_v202509"
 
 ##### load rules #####
 include: "rules/common.smk"
 include: "rules/ref.smk"
 include: "rules/align.smk"
-include: "rules/countmatrix.smk"
+#include: "rules/countmatrix.smk"
 
 ##### target rules #####
 
 rule all:
     input:
-        expand("results/xengsort/{sample}-graft.1.fq.gz", sample=samples["sample_name"]),
-        expand("results/xengsort/{sample}-graft.2.fq.gz", sample=samples["sample_name"])
+        expand("results/picard/pe/{sample}_picard_align_matrix.txt", sample=samples["sample_name"]),
+        expand("results/picard/se/{sample}_picard_align_matrix.txt", sample=samples["sample_name"])
