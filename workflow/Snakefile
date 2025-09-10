@@ -5,11 +5,11 @@ workdir: "/cluster/projects/livingbank/workspace/Guanqiao/workflow/WES_PDX_PDO_P
 include: "rules/common.smk"
 include: "rules/ref.smk"
 include: "rules/align.smk"
-#include: "rules/countmatrix.smk"
+include: "rules/gatk4.smk"
+include: "rules/mutect2.smk"
 
 ##### target rules #####
 
 rule all:
     input:
-        expand("results/picard/pe/{sample}_picard_align_matrix.txt", sample=samples["sample_name"]),
-        expand("results/picard/se/{sample}_picard_align_matrix.txt", sample=samples["sample_name"])
+        "results/maf/cohort_merged.maf"
