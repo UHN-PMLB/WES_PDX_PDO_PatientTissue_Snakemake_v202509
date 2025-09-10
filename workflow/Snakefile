@@ -1,0 +1,18 @@
+# this container defines the underlying OS for each job when using the workflow
+workdir: "/cluster/projects/cesconlab/workspace/Guanqiao/workflow/RNAseq_test"
+
+##### load rules #####
+include: "rules/common.smk"
+include: "rules/ref.smk"
+include: "rules/align.smk"
+include: "rules/countmatrix.smk"
+
+##### target rules #####
+
+rule all:
+    input:
+        "results/counts/all_gene_tpm_raw.tsv",
+        "results/counts/all_isoform_tpm_raw.tsv",
+        "results/counts/all_gene_count_raw.tsv",
+        "results/counts/all_isoform_count_raw.tsv",
+        expand("results/picard/{strand}/{sample}_picard_align_matrix.txt", sample=samples["sample_name"], strand=samples["single_pair_end"])

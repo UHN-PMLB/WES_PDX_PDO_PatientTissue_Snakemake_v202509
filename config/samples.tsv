@@ -1,0 +1,4 @@
+sample_name	sample_type	single_pair_end	fq1	fq2
+S104987	PDX	pe	/cluster/projects/cesconlab/SEQUENCES_2025/20250318_LH00244_0271_A22WC3GLT3_Cescon_Jennifer_WES/104987P1DNA_S39.R1.merged.fastq.gz	/cluster/projects/cesconlab/SEQUENCES_2025/20250318_LH00244_0271_A22WC3GLT3_Cescon_Jennifer_WES/104987P1DNA_S39.R2.merged.fastq.gz
+BPTO51	PDO	pe	/cluster/projects/cesconlab/workspace/Guanqiao/workflow/WES_2024Dec/data/BPTO51_1_S1_R1_001.fastq.gz	/cluster/projects/cesconlab/workspace/Guanqiao/workflow/WES_2024Dec/data/BPTO51_1_S1_R2_001.fastq.gz
+BPTO51T	PatientTissue	pe	/cluster/projects/cesconlab/workspace/Guanqiao/workflow/WES_2024Dec/data/BPTO51T_2_S2_R1_001.fastq.gz	/cluster/projects/cesconlab/workspace/Guanqiao/workflow/WES_2024Dec/data/BPTO51T_2_S2_R2_001.fastq.gz

@@ -1,0 +1,48 @@
+__default__:
+  mem : 8G
+  cpus-per-task : 1
+  partition : 'all'
+  time : 08:00:00
+
+deconvolutexenograft:
+  cpus-per-task : 4
+  mem : 81G
+  partition : 'veryhimem'
+  time : 1-00:00:00
+
+deconvolutexengsort:
+  cpus-per-task : 4
+  mem : 81G
+  partition : 'veryhimem'
+  time : 1-00:00:00
+
+fastp:
+  mem : 20G
+  time : 03:00:00
+
+bowtie2:
+  cpus-per-task : 4
+  mem : 30G
+  time : 1-00:00:00
+
+align_se:
+  cpus-per-task : 12
+  mem : 59G
+  partition : 'himem'
+  time : 1-00:00:00
+  time : 23:00:00
+
+align_pe:
+  cpus-per-task : 12
+  mem : 59G
+  partition : 'himem'
+  time : 1-00:00:00
+
+rseqc_readdup:
+  mem : 59G
+  partition : 'himem'
+  time : 1-00:00:00
+
+calculate_expression:
+  time : 1-00:00:00
+  mem : 16G
