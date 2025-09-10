@@ -1,5 +1,5 @@
 #! /bin/bash
-#SBATCH -J RNAseq-scheduler
+#SBATCH -J WES-scheduler
 #SBATCH -t 1-00:00:00
 #SBATCH -N 1
 #SBATCH -n 1

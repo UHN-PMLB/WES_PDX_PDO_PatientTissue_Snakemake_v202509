@@ -11,5 +11,5 @@ include: "rules/countmatrix.smk"
 
 rule all:
     input:
-        expand("results/xengsort/{sample}-graft.1.fq.gz", sample=SAMPLES),
-        expand("results/xengsort/{sample}-graft.2.fq.gz", sample=SAMPLES)
+        expand("results/xengsort/{sample}-graft.1.fq.gz", sample=samples["sample_name"]),
+        expand("results/xengsort/{sample}-graft.2.fq.gz", sample=samples["sample_name"])
