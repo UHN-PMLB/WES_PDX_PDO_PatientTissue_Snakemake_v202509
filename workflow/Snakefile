@@ -3,7 +3,6 @@ workdir: "/cluster/projects/livingbank/workspace/Guanqiao/workflow/WES_PDX_PDO_P
 
 ##### load rules #####
 include: "rules/common.smk"
-include: "rules/ref.smk"
 include: "rules/align.smk"
 include: "rules/gatk4.smk"
 include: "rules/mutect2.smk"
