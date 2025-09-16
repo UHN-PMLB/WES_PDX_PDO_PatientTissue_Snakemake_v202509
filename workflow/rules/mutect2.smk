@@ -52,6 +52,8 @@ rule vcf2maf:
         ref = config["ref_index"]["genome"]
     output:
         maf = "results/maf/{strand}/{sample}.maf"
+    params:
+        vep_cache = "/cluster/tools/data/commondata/ensembl/vep/113"
     threads: 4
     shell:
         """
@@ -76,8 +78,7 @@ rule vcf2maf:
             --species homo_sapiens \
             --vep-forks {threads} \
             --vep-path $(dirname $(which vep)) \
-            --vep-data /cluster/tools/data/genomes/human/GRCh38/iGenomes/Annotation/VEP_cache \
-            --filter-vcf /cluster/tools/data/genomes/human/GRCh38/iGenomes/Annotation/VEP_cache/ExAC_nonTCGA.r1.sites.hg19ToHg38.vep.vcf.gz
+            --vep-data {params.vep_cache} \
         """
 
 rule merge_mafs:
