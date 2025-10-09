@@ -15,8 +15,7 @@ rule gatk_markduplicates:
             -I {input.bam} \
             -O {output.bam} \
             -M {output.metrics} \
-            --CREATE_INDEX true \
-            --VALIDATION_STRINGENCY LENIENT \
+            ----create-output-bam-index true \
             --tmp-dir tmp/ \
             --spark-master local[{threads}]
         """
