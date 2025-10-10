@@ -11,5 +11,5 @@ snakemake \
 --jobs 20 \
 --profile slurm \
 --cluster-config slurm/cluster.json \
---latency-wait 10 \
+--latency-wait 60 \
 --rerun-incomplete
