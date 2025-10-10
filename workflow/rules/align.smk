@@ -104,7 +104,9 @@ rule bwa_mem2_align_pe:
         mkdir -p results/bwa/pe/{wildcards.sample}
 
         apptainer run {params.bwamem2container} \
-        bwa-mem2 mem -t {threads} {params.ref} {input.fq1} {input.fq2} \
+        bwa-mem2 mem -t {threads} \
+		      -R "@RG\tID:{wildcards.sample}\tLB:Exome\tSM:{wildcards.sample}\tPL:ILLUMINA" \
+		      {params.ref} {input.fq1} {input.fq2} \
             | samtools sort -@ {threads} -o {output.bam}
         """
 
@@ -128,7 +130,9 @@ rule bwa_mem2_align_se:
         mkdir -p results/bwa/se/{wildcards.sample}
 
         apptainer run {params.bwamem2container} \
-        bwa-mem2 mem -t {threads} {params.ref} {input.fq1} \
+        bwa-mem2 mem -t {threads} \
+		      -R "@RG\tID:{wildcards.sample}\tLB:Exome\tSM:{wildcards.sample}\tPL:ILLUMINA" \
+		      {params.ref} {input.fq1} \
             | samtools sort -@ {threads} -o {output.bam}
         """
 
