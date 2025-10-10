@@ -18,6 +18,9 @@ rule gatk_markduplicates:
             ----create-output-bam-index true \
             --tmp-dir tmp/ \
             --spark-master local[{threads}]
+
+        # ✅ ensure BAM index exists
+        samtools index -@ {threads} {output.bam}
         """
 
 
