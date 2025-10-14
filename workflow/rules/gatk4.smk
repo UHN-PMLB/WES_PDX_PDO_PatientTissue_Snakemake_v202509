@@ -10,6 +10,7 @@ rule gatk_markduplicates:
     shell:
         """
         module load gatk/4.6.0.0
+        module load samtools/1.20
 
         gatk --java-options "-Xmx32G" MarkDuplicatesSpark \
             -I {input.bam} \
