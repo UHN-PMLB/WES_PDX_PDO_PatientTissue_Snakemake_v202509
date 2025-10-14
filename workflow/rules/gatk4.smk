@@ -4,13 +4,12 @@ rule gatk_markduplicates:
         bai = "results/bwa/{strand}/{sample}/Aligned.sortedByCoord.out.bam.bai"
     output:
         bam = "results/gatk/{strand}/{sample}.dedup.bam",
-        bai = "results/gatk/{strand}/{sample}.dedup.bai",
+        bai = "results/gatk/{strand}/{sample}.dedup.bam.bai",
         metrics = "results/gatk/{strand}/{sample}.dedup.metrics.txt"
     threads: 8
     shell:
         """
         module load gatk/4.6.0.0
-        module load samtools/1.20
 
         gatk --java-options "-Xmx32G" MarkDuplicatesSpark \
             -I {input.bam} \
@@ -19,9 +18,6 @@ rule gatk_markduplicates:
             ----create-output-bam-index true \
             --tmp-dir tmp/ \
             --spark-master local[{threads}]
-
-        # ✅ ensure BAM index exists
-        samtools index -@ {threads} {output.bam}
         """
 
 
