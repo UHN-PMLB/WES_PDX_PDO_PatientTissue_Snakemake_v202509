@@ -3,8 +3,8 @@ rule fastp:
       f1 = get_fq1,
       f2 = get_fq2,
    output:
-      trim_f1 = "results/fastp/{sample}-trim.1.fq.gz",
-      trim_f2 = "results/fastp/{sample}-trim.2.fq.gz",
+      trim_f1 = temp("results/fastp/{sample}-trim.1.fq.gz"),
+      trim_f2 = temp("results/fastp/{sample}-trim.2.fq.gz"),
       json = "results/fastp/{sample}.fastp.json",
       html = "results/fastp/{sample}.fastp.html",
    threads: 4
@@ -21,8 +21,8 @@ rule deconvolutexengsort:
       f1 =  "results/fastp/{sample}-trim.1.fq.gz",
       f2 =  "results/fastp/{sample}-trim.2.fq.gz",
    output:
-      graftf1 =  "results/xengsort/{sample}-graft.1.fq.gz",
-      graftf2 =  "results/xengsort/{sample}-graft.2.fq.gz",
+      graftf1 = temp("results/xengsort/{sample}-graft.1.fq.gz"),
+      graftf2 = temp("results/xengsort/{sample}-graft.2.fq.gz"),
    params:
       xengsortidx = config["ref"]["xengsortidx"],
       xengsortcontainer = config['env']['xengsort'],
@@ -59,8 +59,8 @@ rule deconvolutexengsort:
       done
 
     else
-      ln -sf $(realpath {input.f1}) {output.graftf1}
-      ln -sf $(realpath {input.f2}) {output.graftf2}
+      cp {input.f1} {output.graftf1}
+      cp {input.f2} {output.graftf2}
     fi
     """
 
@@ -91,7 +91,7 @@ rule bwa_mem2_align_pe:
                      ref=config["ref_index"]["genome"], 
                      ext=["0123","amb","ann","bwt.2bit.64","pac"])
     output:
-        bam = "results/bwa/pe/{sample}/Aligned.sortedByCoord.out.bam",
+        bam = temp("results/bwa/pe/{sample}/Aligned.sortedByCoord.out.bam"),
     params:
         ref = config["ref_index"]["genome"],
         bwamem2container = config['env']['bwa_mem2'],
@@ -105,8 +105,8 @@ rule bwa_mem2_align_pe:
 
         apptainer run {params.bwamem2container} \
         bwa-mem2 mem -t {threads} \
-		      -R "@RG\tID:{wildcards.sample}\tLB:Exome\tSM:{wildcards.sample}\tPL:ILLUMINA" \
-		      {params.ref} {input.fq1} {input.fq2} \
+		-R '@RG\\tID:{wildcards.sample}_RG1\\tLB:Exome\\tSM:{wildcards.sample}\\tPL:ILLUMINA' \
+		{params.ref} {input.fq1} {input.fq2} \
             | samtools sort -@ {threads} -o {output.bam}
         """
 
@@ -117,7 +117,7 @@ rule bwa_mem2_align_se:
                      ref=config["ref_index"]["genome"], 
                      ext=["0123","amb","ann","bwt.2bit.64","pac"])
     output:
-        bam = "results/bwa/se/{sample}/Aligned.sortedByCoord.out.bam",
+        bam = temp("results/bwa/se/{sample}/Aligned.sortedByCoord.out.bam"),
     params:
         ref = config["ref_index"]["genome"],
         bwamem2container = config['env']['bwa_mem2'],
@@ -131,8 +131,8 @@ rule bwa_mem2_align_se:
 
         apptainer run {params.bwamem2container} \
         bwa-mem2 mem -t {threads} \
-		      -R "@RG\tID:{wildcards.sample}\tLB:Exome\tSM:{wildcards.sample}\tPL:ILLUMINA" \
-		      {params.ref} {input.fq1} \
+		-R '@RG\\tID:{wildcards.sample}_RG1\\tLB:Exome\\tSM:{wildcards.sample}\\tPL:ILLUMINA' \
+		{params.ref} {input.fq1} \
             | samtools sort -@ {threads} -o {output.bam}
         """
 
@@ -157,7 +157,9 @@ rule picard_align_matrix:
     shell:
         """
         module load picard/2.10.9
-
+        
+        mkdir -p results/picard/{wildcards.strand}
+        
         java -jar $picard_dir/picard.jar CollectAlignmentSummaryMetrics \
             R={params.ref} \
             I={input.bam} \

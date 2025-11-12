@@ -22,16 +22,16 @@ ref:
 
 ref_index:
   # reference genome for human genome, GRCh38
-  genome: "ref/genomes/human/GRCh38/genome.fa"
+  genome: "ref/genomes/human/hg38/resources_broad_hg38_v0_Homo_sapiens_assembly38.fasta"
+  # reference genome chr name and length
+  genome_length: "ref/genomes/human/hg38/resources_broad_hg38_v0_Homo_sapiens_assembly38.genome"
+  # reference flat file
+  refFlat: "ref/genomes/human/hg38/references_hg38_v0_GRCh38_gencode.v27.refFlat.txt"
   # Path to bwa-mem2 index. 
   # If missing, workflow will run bwa-mem2 index to generate genome.fa.["0123"|"amb"|"ann"|"bwt.2bit.64"|"pac"]
-  bwa_mem2_index: "ref/genomes/human/GRCh38/genome.fa.0123"
+  bwa_mem2_index: "ref/genomes/human/hg38/resources_broad_hg38_v0_Homo_sapiens_assembly38.fasta.0123"
 
-# star:
-#   # reference genome used by STAR alignement, GRCh38
-#   star-genome: "ref/genomes/human/GRCh38/STAR/STAR_GRCh38_150"
-#   # reference genome annotation used by STAR alignment, GRCh38
-#   gtf: "ref/genomes/human/GRCh38/GTF/genome.gtf"
-#   # Extra parameters to pass to STAR (optional).
-#   # Note: some default parameters are already hardcoded in workflow/rules/align.smk
-#   params: ""
+cnv:
+  # target region
+  target_bed: "ref/genomes/human/WES_target/SureSelectXT_HS_Human_All_Exon_V8_S33266340_Covered.bed"
+
