@@ -121,7 +121,7 @@ rule merge_maf_final:
         tail -n +2 {input.rescue} >> {output.maf}
 
         # Deduplicate by Chrom:Start:Alt
-        awk -F'\\t' 'NR==1{{print; next}} NR>1{{key=$2":"$3":"$7":"$8; if(!(key in seen)){{print; seen[key]=1}}}}' {output.maf} > {output.maf}.tmp && mv {output.maf}.tmp {output.maf}
+        awk -F'\\t' 'NR==1{{print; next}} NR>1{{key=$5":"$6":"$11":"$13; if(!(key in seen)){{print; seen[key]=1}}}}' {output.maf} > {output.maf}.tmp && mv {output.maf}.tmp {output.maf}
         """
 
 
